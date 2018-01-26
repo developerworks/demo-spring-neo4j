@@ -25,5 +25,5 @@ nbdist/
 
 
 demo-spring-neo4j.iml
-neo4j-embedded-databases
+neo4j-embedded-databases/*.db
 .mvn
