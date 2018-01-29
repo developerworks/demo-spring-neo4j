@@ -3,6 +3,7 @@ package com.example.demospringneo4j.embedded;
 import lombok.extern.slf4j.Slf4j;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.kernel.api.exceptions.KernelException;
 import org.neo4j.kernel.configuration.BoltConnector;
@@ -18,6 +19,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 @Slf4j
@@ -28,6 +33,8 @@ public class Neo4jShell {
     private static final String PROPERTY_USERNAME = "username";
     // 数据库实例
     private static GraphDatabaseService graphDb;
+
+    private static final FileSystem fs = FileSystems.getDefault();
 
     /**
      * 启动
@@ -99,6 +106,9 @@ public class Neo4jShell {
      */
     private static void startLocalShell1() throws Exception {
         // 通过工程方法创建嵌入式数据库实例
+        // 如果 DATABASE_DIRECTORY 存在, 使用现有的数据, 否则创建新的数据库
+        // 一个数据库目录只能由一个数据库实例启动, 多个实例不能指向同一个数据库目录
+
         graphDb = new GraphDatabaseFactory().newEmbeddedDatabase(DATABASE_DIRECTORY);
         // 虚拟机关闭钩子
         Util.registerShutdownHook(graphDb);
@@ -121,8 +131,24 @@ public class Neo4jShell {
         // 创建 BoltConnector 连接器实例
         BoltConnector bolt = new BoltConnector("0");
         // 通过 newEmbeddedDatabaseBuilder 构建 GraphDatabaseService 实例
+        Path path = Paths.get("conf/neo4j.conf");
+        log.info("Configuration file: {}", path.toAbsolutePath());
+        Path pluginPath = Paths.get("plugins");
+        log.info("Plugins directory: {}", pluginPath.toAbsolutePath());
+
         graphDb = new GraphDatabaseFactory()
             .newEmbeddedDatabaseBuilder(DATABASE_DIRECTORY)
+            // 配置
+            .setConfig(GraphDatabaseSettings.pagecache_memory, "512M")
+            .setConfig(GraphDatabaseSettings.string_block_size, "60")
+            .setConfig(GraphDatabaseSettings.array_block_size, "300")
+            .setConfig(GraphDatabaseSettings.store_internal_log_level, "DEBUG")
+//            .setConfig(GraphDatabaseSettings.plugin_dir, pluginPath.toAbsolutePath().toString())
+            .setConfig(GraphDatabaseSettings.procedure_unrestricted, "*")
+//            .setConfig(GraphDatabaseSettings.procedure_whitelist, "apoc.*")
+            // 通过配置文件对上面的默认设置进行覆盖
+//            .loadPropertiesFromFile(path.toAbsolutePath().toString())
+
             // 启用连接器
             .setConfig(bolt.enabled, "true")
             // 协议类型, 支持BOLT,BOLT

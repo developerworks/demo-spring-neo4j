@@ -18,7 +18,7 @@ public class Util {
      *
      * @param db
      */
-    public static void registerShutdownHook(GraphDatabaseService db) {
+    public static void registerShutdownHook(final GraphDatabaseService db) {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             log.info("Shutting down database...");
             db.shutdown();
