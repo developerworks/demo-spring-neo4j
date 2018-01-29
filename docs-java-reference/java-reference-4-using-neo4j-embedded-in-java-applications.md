@@ -1,4 +1,69 @@
 
+### 4.1.4 启动和停止
+
+启动
+
+```
+GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( databaseDirectory );
+registerShutdownHook( graphDb );
+```
+
+停止
+
+```
+graphDb.shutdown();
+```
+
+要让数据库正确的关闭, 需要注册一个JVM钩子:
+
+```
+/**
+ * JVM关闭的钩子
+ *
+ * 1. 程序正常退出
+ * 2. 使用System.exit()
+ * 3. 终端使用Ctrl+C触发的中断
+ * 4. 系统关闭
+ * 5. OutOfMemory宕机
+ * 6. 使用Kill pid命令干掉进程（注：在使用kill -9 pid时，是不会被调用的）
+ *
+ * @param db
+ */
+public static void registerShutdownHook(final GraphDatabaseService db) {
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+        log.info("Shutting down database...");
+        db.shutdown();
+    }));
+}
+```
+
+#### 4.1.4.1 使用配置文件启动
+
+```
+GraphDatabaseService graphDb = new GraphDatabaseFactory()
+    .newEmbeddedDatabaseBuilder("/tmp/graph.db")
+    .loadPropertiesFromFile( /tmp/neo4j.conf" )
+    .newGraphDatabase();
+```
+
+配置设置也可以以编程的方式完成
+
+```
+GraphDatabaseService graphDb = new GraphDatabaseFactory()
+    .newEmbeddedDatabaseBuilder( testDirectory.graphDbDir() )
+    .setConfig( GraphDatabaseSettings.pagecache_memory, "512M" )
+    .setConfig( GraphDatabaseSettings.string_block_size, "60" )
+    .setConfig( GraphDatabaseSettings.array_block_size, "300" )
+    .newGraphDatabase();
+```
+
+#### 4.1.4.1 启动只读实例
+
+```
+graphDb = new GraphDatabaseFactory().newEmbeddedDatabaseBuilder( dir )
+        .setConfig( GraphDatabaseSettings.read_only, "true" )
+        .newGraphDatabase();
+```
 
 
 ### 4.14 通过Bolt协议访问嵌入式Neo4j实例
