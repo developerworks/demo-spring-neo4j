@@ -44,8 +44,9 @@ public class Neo4jShell {
      */
     public static void main(final String[] args) throws Exception {
         // 获取用户输入
-        boolean trueForLocal = waitForUserInput("Would you like to start a local shell instance or enable neo4j to accept remote connections [l/r]? ")
-            .equalsIgnoreCase("l");
+        boolean trueForLocal = true;
+//        boolean trueForLocal = waitForUserInput("Would you like to start a local shell instance or enable neo4j to accept remote connections [l/r]? ")
+//            .equalsIgnoreCase("l");
 
         // 本地还是远程?
         if (trueForLocal) {
@@ -133,8 +134,8 @@ public class Neo4jShell {
         // 通过 newEmbeddedDatabaseBuilder 构建 GraphDatabaseService 实例
         Path path = Paths.get("conf/neo4j.conf");
         log.info("Configuration file: {}", path.toAbsolutePath());
-        Path pluginPath = Paths.get("plugins");
-        log.info("Plugins directory: {}", pluginPath.toAbsolutePath());
+//        Path pluginPath = Paths.get("plugins");
+//        log.info("Plugins directory: {}", pluginPath.toAbsolutePath());
 
         graphDb = new GraphDatabaseFactory()
             .newEmbeddedDatabaseBuilder(DATABASE_DIRECTORY)
@@ -144,11 +145,10 @@ public class Neo4jShell {
             .setConfig(GraphDatabaseSettings.array_block_size, "300")
             .setConfig(GraphDatabaseSettings.store_internal_log_level, "DEBUG")
 //            .setConfig(GraphDatabaseSettings.plugin_dir, pluginPath.toAbsolutePath().toString())
-            .setConfig(GraphDatabaseSettings.procedure_unrestricted, "*")
+//            .setConfig(GraphDatabaseSettings.procedure_unrestricted, "*")
 //            .setConfig(GraphDatabaseSettings.procedure_whitelist, "apoc.*")
             // 通过配置文件对上面的默认设置进行覆盖
-//            .loadPropertiesFromFile(path.toAbsolutePath().toString())
-
+            .loadPropertiesFromFile(path.toAbsolutePath().toString())
             // 启用连接器
             .setConfig(bolt.enabled, "true")
             // 协议类型, 支持BOLT,BOLT
@@ -159,9 +159,12 @@ public class Neo4jShell {
             .setConfig(bolt.encryption_level, BoltConnector.EncryptionLevel.OPTIONAL.toString())
             // 启用远程SHELL
             .setConfig(ShellSettings.remote_shell_enabled, Settings.TRUE)
+//            .setConfig("com.graphaware.runtime.enabled", "true")
             .newGraphDatabase();
 
         registerFunction(graphDb, apoc.date.Date.class);
+        registerFunction(graphDb, ga.uuid.NodeUuidFunctions.class);
+        registerFunction(graphDb, ga.uuid.RelationshipUuidFunctions.class);
         // RETURN apoc.date.format(1516898575, "ms", "yyyy-MM-dd hh:mm:ss");
         // RETURN apoc.date.currentTimestamp();
         // 虚拟机关闭钩子
