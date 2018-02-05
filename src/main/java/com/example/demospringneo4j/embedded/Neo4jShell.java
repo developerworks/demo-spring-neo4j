@@ -163,8 +163,8 @@ public class Neo4jShell {
             .newGraphDatabase();
 
         registerFunction(graphDb, apoc.date.Date.class);
-        registerFunction(graphDb, ga.uuid.NodeUuidFunctions.class);
-        registerFunction(graphDb, ga.uuid.RelationshipUuidFunctions.class);
+//        registerFunction(graphDb, ga.uuid.NodeUuidFunctions.class);
+//        registerFunction(graphDb, ga.uuid.RelationshipUuidFunctions.class);
         // RETURN apoc.date.format(1516898575, "ms", "yyyy-MM-dd hh:mm:ss");
         // RETURN apoc.date.currentTimestamp();
         // 虚拟机关闭钩子

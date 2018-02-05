@@ -1,0 +1,1 @@
+![权限模型](https://upload.wikimedia.org/wikipedia/en/1/19/Role-based_access_control.jpg)
