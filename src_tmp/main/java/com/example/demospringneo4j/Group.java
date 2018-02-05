@@ -1,4 +1,4 @@
-package com.example.tmp;
+package com.example.demospringneo4j;
 
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;

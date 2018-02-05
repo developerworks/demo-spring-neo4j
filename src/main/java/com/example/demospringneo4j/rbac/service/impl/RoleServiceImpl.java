@@ -1,7 +1,7 @@
 package com.example.demospringneo4j.rbac.service.impl;
 
 import org.springframework.stereotype.Service;
-import com.example.tmp.Role;
+import com.example.demospringneo4j.Role;
 import com.example.demospringneo4j.rbac.service.RoleService;
 
 

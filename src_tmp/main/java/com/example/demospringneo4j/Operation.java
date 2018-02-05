@@ -1,4 +1,4 @@
-package com.example.tmp;
+package com.example.demospringneo4j;
 
 public enum Operation {
     CREATE,

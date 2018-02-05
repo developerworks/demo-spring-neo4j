@@ -1,6 +1,5 @@
-package com.example.tmp;
+package com.example.demospringneo4j;
 
-import com.example.tmp.Permission;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import org.springframework.data.annotation.Id;

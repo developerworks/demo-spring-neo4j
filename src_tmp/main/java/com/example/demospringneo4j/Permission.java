@@ -1,4 +1,4 @@
-package com.example.tmp;
+package com.example.demospringneo4j;
 
 /**
  * 权限建模为关系还是节点?
