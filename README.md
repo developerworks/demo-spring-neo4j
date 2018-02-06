@@ -81,3 +81,7 @@ private static void startLocalShell() throws Exception {
     shellServer.shutdown();
 }
 ```
+
+## 访问HAL Browser
+
+http://localhost:8080/rbac/browser/index.html#http://localhost:8080/rbac/resource
