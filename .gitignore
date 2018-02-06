@@ -23,7 +23,5 @@ dist/
 nbdist/
 .nb-gradle/
 
-
-demo-spring-neo4j.iml
 neo4j-embedded-databases/*.db
 .mvn
