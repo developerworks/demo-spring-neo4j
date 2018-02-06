@@ -5,7 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.ogm.annotation.GeneratedValue;
+import org.neo4j.ogm.annotation.Id;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
 
 @Getter
 @Setter
@@ -13,7 +16,7 @@ import org.neo4j.ogm.annotation.*;
 @AllArgsConstructor
 @NodeEntity
 @Slf4j
-public class Resource {
+public class Role {
 
     @Id
     @GeneratedValue
@@ -25,12 +28,9 @@ public class Resource {
     @Property(name = "name")
     private String name;
 
-    @Property(name = "path")
-    private String path;
-
-    @PostLoad
-    public void postLoad() {
-        log.info("callback post loaded");
-    }
-
+//    /**
+//     * 一个角色有多个权限
+//     */
+//    @Relationship(type = "HAS_PERMISSION", direction = Relationship.OUTGOING)
+//    private Set<Permission> permission;
 }
